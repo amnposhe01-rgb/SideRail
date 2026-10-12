@@ -1,16 +1,6 @@
-# Railway service configuration for SideRail
-# The static index.html serving path is resolved automatically at runtime.
-
 [build]
-builder = "dockerfile"
-dockerfilePath = "Dockerfile"
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run build --workspace=@siderail/web"
 
 [deploy]
-startCommand = "node apps/server/dist/index.js"
-healthcheckPath = "/healthz"
-healthcheckTimeout = 120
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10
-
-[[services]]
-name = "siderail"
+startCommand = "npm run start --workspace=@siderail/web"
