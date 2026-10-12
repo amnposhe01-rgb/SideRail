@@ -4,12 +4,22 @@
 FROM node:24-alpine AS build
 WORKDIR /app
 ENV npm_config_audit=false npm_config_fund=false
-COPY package.json package-lock.json ./
+
+# کپی کردن package.json ها بدون package-lock.json
+COPY package.json ./
 COPY apps/server/package.json apps/server/
 COPY apps/web/package.json apps/web/
-RUN npm install
+
+# نصب پکیج‌ها بدون استفاده از package-lock قدیمی
+RUN npm install --no-audit --no-fund
+
+# کپی کردن کل سورس
 COPY . .
-RUN npm run build
+
+# بیلد کردن هر دو workspace
+RUN npm run build:web && npm run build:server
+
+# حذف dev dependencies
 RUN npm prune --omit=dev
 
 # ---- runtime stage ----
